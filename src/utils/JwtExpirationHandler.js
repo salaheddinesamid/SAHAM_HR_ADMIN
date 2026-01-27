@@ -8,7 +8,7 @@ const handleExpiredJWT = ()=>{
     Cookies.remove("accessToken");
 
     // redirection to login page
-    window.location.href = "/";
+    window.location.href = "/login";
 }
 
 export default handleExpiredJWT;
