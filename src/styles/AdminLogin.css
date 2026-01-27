@@ -1,0 +1,77 @@
+.admin-login-page {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+}
+
+.admin-login-card {
+  width: 420px;
+  padding: 45px;
+  background: linear-gradient(145deg, #ffffff, #f3f6fb);
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: fadeSlide 0.5s ease;
+}
+
+.admin-login-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.admin-login-header img {
+  height: 60px;
+  margin-bottom: 10px;
+}
+
+.admin-login-header h2 {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.admin-login-header p {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.admin-login-btn {
+  margin-top: 18px;
+  width: 100%;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: white;
+  padding: 13px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.admin-login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+.admin-login-footer {
+  margin-top: 18px;
+  text-align: center;
+}
+
+.admin-login-footer a {
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
