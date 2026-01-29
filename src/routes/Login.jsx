@@ -46,7 +46,7 @@ export const AdminLoginPage = () => {
 
     setLoginSuccessMessage("Connexion réussie, redirection...");
 
-    setTimeout(() => navigate(""), 1200);
+    setTimeout(() => navigate("/"), 1200);
   };
 
   const handleSubmit = async () => {
