@@ -20,6 +20,8 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import AddIcon from "@mui/icons-material/Add";
 import { getAllEmployees } from "../services/EmployeeService";
 import { EmployeeModificationDialog } from "../dialogs/EmployeeModification";
+import { Info } from "lucide-react";
+import { EmployeeDetailsDialog } from "../dialogs/EmployeeDetailsDialog";
 
 const roles = [
     { id: 1, name: "ADMIN", label: "Admin" },
@@ -33,9 +35,12 @@ export const EmployeeManagement = () => {
   const [loading, setLoading] = useState(false);
 
   const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(10);
   const [totalElements, setTotalElements] = useState(0);
-
+  // Employee Details
+  const [detailsDialgOpen, setDetailsDialogOpen] = useState(false);
+  const [currentEmployee, setCurrentEmployee] = useState(null);
+  // New Employee
   const [openDialog, setOpenDialog] = useState(false);
   // Update employee dialog
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
@@ -49,6 +54,11 @@ export const EmployeeManagement = () => {
   const handleCloseUpdateDialog = ()=>{
     setSelectedEmployee(null);
     setOpenUpdateDialog(false);
+  }
+  // handle close the employee details dialog
+  const handleCloseDetailsDialog = ()=>{
+    setCurrentEmployee(null);
+    setDetailsDialogOpen(false);
   }
 
   const fetchEmployees = async () => {
@@ -128,6 +138,14 @@ export const EmployeeManagement = () => {
                         <LogoutIcon />
                       </IconButton>
                     </Tooltip>
+                    <Tooltip title="info" onClick={()=> {
+                        setCurrentEmployee(employee)
+                        setDetailsDialogOpen(true);
+                    }}>
+                        <IconButton>
+                            <Info/>
+                        </IconButton>
+                    </Tooltip>
                   </TableCell>
                 </TableRow>
               ))}
@@ -136,7 +154,7 @@ export const EmployeeManagement = () => {
 
           <TablePagination
             component="div"
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[10, 30, 40]}
             count={totalElements}
             rowsPerPage={pageSize}
             page={page}
@@ -148,7 +166,10 @@ export const EmployeeManagement = () => {
           />
         </>
       )}
-
+      <EmployeeDetailsDialog 
+      open={detailsDialgOpen} 
+      onClose={handleCloseDetailsDialog}
+      employee={currentEmployee}/>
       <NewEmployeeDialog
         open={openDialog}
         onClose={() => setOpenDialog(false)}
