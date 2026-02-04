@@ -4,6 +4,8 @@ import { AdminLoginPage } from './routes/Login';
 import { AdminServiceProvider } from './context/ViewContext';
 import { AdminProtectedRoute } from './routes/HomeProtectedRoute';
 import { AdminDashboard } from './routes/Home';
+import "bootstrap/dist/js/bootstrap.js"
+import "bootstrap/dist/css/bootstrap.css"
 
 function App() {
   return (
