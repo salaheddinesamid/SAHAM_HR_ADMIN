@@ -72,3 +72,8 @@ export const verifyManager = async(managerName)=>{
 
     return response.data;
 }
+
+export const getAllManagers = async()=>{
+    const response = await EmployeeApi.get("managers/get_all");
+    return response.data;
+}
