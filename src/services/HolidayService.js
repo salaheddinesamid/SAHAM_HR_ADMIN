@@ -14,7 +14,7 @@ export const getAllHolidays = async()=>{
  * @returns 
  */
 export const updateHoliday = async(name, requestDto)=>{
-    const repsonse = await HolidaysAPI.put(`/update/${name}`, requestDto);
+    const repsonse = await HolidaysAPI.patch(`/update/${name}`, requestDto);
     return repsonse.status;
 }
 /**

@@ -32,7 +32,7 @@ export const HolidayUpdateDialog = ({holiday, open, onClose, onSuccess})=>{
     const handleSubmit = async()=>{
         try{
             setLoading(true);
-            const res = await updateHoliday(requestDto?.name,requestDto);
+            const res = await updateHoliday(holiday?.name, holiday?.type,requestDto);
             console.log(requestDto);
             setSuccess(true);
             setTimeout(()=>{
@@ -58,7 +58,8 @@ export const HolidayUpdateDialog = ({holiday, open, onClose, onSuccess})=>{
     useEffect(()=>{
         setRequestDto({
             name : holiday?.name,
-            date : holiday?.date,
+            startDate : holiday?.startDate,
+            endDate : holiday?.endDate,
             leaveDays : holiday?.leaveDays
         })
     },[holiday])
