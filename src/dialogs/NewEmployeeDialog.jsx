@@ -1,3 +1,4 @@
+
 import {
   Dialog,
   DialogContent,
@@ -21,6 +22,37 @@ import { useEffect, useState } from "react";
 import countries from "../nationalities.json"
 import { addEmployee, getAllManagers, verifyManager } from "../services/EmployeeService";
 
+const departments = [
+    { id : 1, label : "Département financier", value : "FINANCE_DEPARTMENT"},
+    { id : 2, label : "Département juridique", value : "LEGAL_DEPARTMENT" },
+    { id : 3, label : "Département informatique", value : "IT"},
+    { id : 4, label : "Département ressources humaines", value : "HUMAN_RESOURCES_DEPARTMENT" },
+    { id : 5, label : "Opérations", value : "OPERATIONS"},
+    { id : 6, label : "Asset management", value : "ASSET_MANAGEMENT" },
+    { id : 7, label : "Cabinet du DG", value : "CEO_OFFICE" },
+    { id : 8, label : "Surveillance bancaire", value : "BANKING_SUPERVISION" },
+]
+const entities  = [
+    { id : 1, label : "SAHAM Horizon", value : "SAHAM_HORIZON"},
+    { id : 2, label : "SAHAM Finances", value : "SAHAM_FINANCES"},
+    { id : 3, label : "SAHAM Foundation", value : "SAHAM_FOUNDATION"}
+]
+const roles = [
+    { id: 1, name: "ADMIN", label: "Admin" },
+    { id: 2, name: "EMPLOYEE", label: "Collaborateur" },
+    { id: 3, name: "MANAGER", label: "Manager" },
+    { id: 4, name: "HR", label: "RH" },
+];
+const familySituation = [
+    { id : 1, name : "SINGLE", label : "Célibataire"},
+    { id : 2, name : "MARRIED" , label : "Marié(e)"},
+];
+
+const genders = [
+    { id : 1, name : "MALE", label : "Homme"},
+    { id : 2, name : "FEMALE" , label : "Femme"},
+]
+
 export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [managers, setManagers] = useState([]);
@@ -39,6 +71,7 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
   const [requestDto, setRequestDto] = useState({
     firstName: "",
     lastName: "",
+    sex : "",
     CIN : "",
     birthDate : "",
     familyStatus : "",
@@ -80,17 +113,7 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
     },
   });
 
-  const roles = [
-    { id: 1, name: "ADMIN", label: "Admin" },
-    { id: 2, name: "EMPLOYEE", label: "Collaborateur" },
-    { id: 3, name: "MANAGER", label: "Manager" },
-    { id: 4, name: "HR", label: "RH" },
-  ];
 
-  const familySituation = [
-    { id : 1, name : "SINGLE", label : "Célibataire"},
-    { id : 1, name : "MARRIED" , label : "Marié(e)"},
-  ]
 
 
   const handleChange = (e) => {
@@ -196,6 +219,14 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
               <Grid item xs={12} md={6}>
                 <TextField label="Nom" name="lastName" value={requestDto.lastName} onChange={handleChange} fullWidth required />
               </Grid>
+              <Grid item xs={12} md={6}>
+                <Select value={requestDto.sex} name="sex" onChange={handleChange} displayEmpty>
+                  <MenuItem disabled value="">Genre</MenuItem>
+                     {genders.map((g)=>(
+                  <MenuItem value={g.name}>{g.label}</MenuItem>
+                  ))}
+                </Select>
+              </Grid>
               
               <Grid item xs={12} md={6}>
                 <TextField label="CIN" name="CIN" value={requestDto.CIN} onChange={handleChange} fullWidth required />
@@ -246,18 +277,19 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
                 onChange={(e)=> setRequestDto((prev)=> ({...prev, ["numberOfChildren"] : parseInt(e.target.value)}))} required />
               </Grid>
               <Grid item xs={12} md={6}>
-                <select
-                className="form-select"
-                style={{ fontSize: "12px" }}
+                <Select
                 value={requestDto.familySituation || ""}
                 name="familySituation"
+                displayEmpty
                 onChange={handleChange}>
-                  <option value="">Situation familiale</option>
+                   <MenuItem disabled value="">
+                     Situation Familiale
+                   </MenuItem>
                   {familySituation.map((s) => (
-                    <option key={s.name} value={s.name}>
+                    <MenuItem key={s.name} value={s.name}>
                       {s.label}
-                    </option>))}
-                </select>
+                    </MenuItem>))}
+                </Select>
               </Grid>
             </Grid>
           </Paper>
@@ -280,6 +312,8 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
                 ["Email pro", "professionalEmail"],
               ].map(([label, name]) => (
                 label === "Manager Direct" ? 
+                <FormControl sx={{ minWidth: 160 }}>
+                  <InputLabel id="manager-label">Manager Direct</InputLabel>
                   <Select
                   fullWidth
                   value={requestDto.professionalDetailsDto.managerId || ""}
@@ -293,17 +327,36 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
                       }
                     }));
                   }}>
-                    <MenuItem value="">
-                      <em>Select the Manager</em>
-                    </MenuItem>
                     {managers.map((m) => (
                       <MenuItem key={m.id} value={m.id}>
                         {m.fullName}
                       </MenuItem>
                     ))}
                   </Select>
-
-                 : <Grid item xs={12} md={12} key={name}>
+                </FormControl>
+                 : label === "Département" ? 
+                 <FormControl sx={{ minWidth: 140 }}>
+                  <InputLabel id="department-label">Département</InputLabel>
+                  <Select name="department" value={requestDto.professionalDetailsDto.department} onChange={handleProfessionalDetailsChange}>
+                    <MenuItem disabled value="">Département</MenuItem>
+                      {departments.map((d)=>(
+                    <MenuItem value={d.value}>{d.label}</MenuItem>
+                  ))}
+                 </Select>
+                 </FormControl>
+                  :
+                 label === "Entité" ? 
+                 <FormControl sx={{ minWidth: 140 }}>
+                  <InputLabel id="entity-label">Entité</InputLabel>
+                  <Select name="entity" value={requestDto.professionalDetailsDto.entity} onChange={handleProfessionalDetailsChange}>
+                    <MenuItem disabled value="">Département</MenuItem>
+                       {entities.map((e)=>(
+                    <MenuItem value={e.value}>{e.label}</MenuItem>
+                  ))}
+                 </Select>
+                 </FormControl>
+                  :
+                 <Grid item xs={12} md={12} key={name}>
                   <TextField
                   label={label}
                   name={name}
