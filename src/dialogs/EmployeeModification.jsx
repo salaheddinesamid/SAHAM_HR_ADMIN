@@ -5,23 +5,24 @@ import { getAllManagers, updateEmployee} from "../services/EmployeeService";
 
 
 export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose, onSuccess, roles})=>{
-
-    const [requestDto, setRequestDto] = useState({
-        firstName: employee?.firstName,
-        lastName: employee?.lastName,
-        CIN : employee?.CIN,
-        birthDate : employee?.birthDate,
-        familyStatus : employee?.familyStatus,
-        numberOfChildren : employee?.numberOfChildren,
-        nationality : employee?.nationality,
-        roles: employee?.roles,
+  // List of managers
+  const [managers, setManagers] = useState([]);  
+  const [requestDto, setRequestDto] = useState({
+        firstName: "",
+        lastName:"",
+        cin : "",
+        birthDate : "",
+        familyStatus : "",
+        numberOfChildren : "",
+        nationality : "",
+        roles: [],
         // Employee Professional Details
         professionalDetailsDto : {
-            matriculation : employee?.professionalDetails?.matriculation,
-            occupation : employee?.professionalDetails?.occupation,
-            department : employee?.professionalDetails?.department,
-            entity : employee?.professionalDetails?.entity,
-            managerId : employee?.professionalDetails.managerId,
+            matriculation : "",
+            occupation : "",
+            department : "",
+            entity : "",
+            managerId : null,
             joinDate : "",
             site : '',
             professionalPhoneNumber : "",
@@ -48,17 +49,18 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
             accumulatedBalance: 0,
             usedBalance: 0,
         },
-    });
-
-    const familySituation = [
-        { id : 1, name : "SINGLE", label : "Célibataire"},
-        { id : 1, name : "MARRIED" , label : "Marié(e)"},
-    ]
-
-    const handleProfessionalDetailsChange = (e) =>{
-        const {name, value} = e.target;
-        setRequestDto((prev)=>({
-            ...prev, professionalDetailsDto : {
+  });
+  // Request payload
+  const [payload, setPayload] = useState({})
+  const familySituation = [
+    { id : 1, name : "SINGLE", label : "Célibataire"},
+    { id : 1, name : "MARRIED" , label : "Marié(e)"},
+  ]
+  
+  const handleProfessionalDetailsChange = (e) =>{
+    const {name, value} = e.target;
+    setRequestDto((prev)=>({
+      ...prev, professionalDetailsDto : {
                 ...prev.professionalDetailsDto, [name] : value
             }
         }))
@@ -71,6 +73,7 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
             }
         }))
     }
+    
     const handleContactDetailsChange = (e) =>{
         const {name, value} = e.target;
         setRequestDto((prev)=>({
@@ -80,7 +83,7 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
         }))
     }
     const [updatedFields, setUpdatedFields] = useState({});
-    const [managers, setManagers] = useState([]);
+    
     const [error, setError] = useState("");
     const [udpateSuccess, setUpdateSuccess] = useState(); 
     const [loading, setLoading] = useState(false);
@@ -96,7 +99,7 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
         }
     }
     /**
-     * 
+     * Handle change the personal details
      * @param {*} e 
      */
     const handleChange = (e)=>{
@@ -109,9 +112,12 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
         setRequestDto((prev)=>(
             {...prev, [name] : value}
         ))
+        setPayload((prev)=>({
+          ...prev, [name] : value
+        }))
     }
     /**
-     * 
+     * Handle change the roles
      * @param {*} roleName 
      */
     const handleRoleChange = (roleName)=>{
@@ -125,51 +131,138 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
         
     }
     /**
-     * 
+     * Handle change the balance details
      * @param {*} e 
      */
     const handleBalanceChange = (e)=>{
-        const {name, value} = e.target;
-
-        setEmployee((prev)=>(
-            {...prev, balanceDetails : {
-                ...prev.balanceDetails, [name] : Math.max(0, Number(value))
-            }}
-        ))
-        setRequestDto((prev)=>(
-            {...prev, employeeBalance : {
-                ...prev.employeeBalance, [name] : Math.max(0, Number(value))
-            }}
-        ))
+      const {name, value} = e.target;
+      setEmployee((prev)=>(
+        {...prev, balanceDetails : {
+          ...prev.balanceDetails, [name] : Math.max(0, Number(value))
+        }}
+      ))
+      setRequestDto((prev)=>(
+        {...prev, employeeBalance : {
+          ...prev.employeeBalance, [name] : Math.max(0, Number(value))
+        }}
+      ))
     }
+
+    // Filter the updated fields in the social details
+    const filterSocialDetails = () =>{
+      const dto = requestDto?.socialDetailsDto || {};
+      const socialDetails = employee?.socialeDetails || {};
+      
+      const filteredDto = Object.fromEntries(
+        Object.entries(dto).filter(
+          ([key, value]) => value !== socialDetails[key]
+        )
+      );
+      if (Object.keys(filteredDto).length > 0) {
+        setPayload((prev) => ({
+          ...prev,
+          socialDetailsDto: filteredDto
+        }));
+      }
+    }
+    // Filter the updatde fields in the professional details
+    const filterProfessionalDetails = () => {
+      const dto = requestDto?.professionalDetailsDto || {};
+      const professionalDetails = employee?.professionalDetails || {};
+      
+      const filteredDto = Object.fromEntries(
+        Object.entries(dto).filter(
+          ([key, value]) => value !== professionalDetails[key]
+        )
+      );
+      if (Object.keys(filteredDto).length > 0) {
+        setPayload((prev) => ({
+          ...prev,
+          professionalDetailsDto: filteredDto
+        }));
+      }
+      
+    };
     /**
-     * 
+     * Submit the request to the server
      */
-    const handleSubmit = async()=>{
+    const handleSubmit = async ()=>{
         try{
-            //const request = requestDto.
-            setLoading(true);
-            const res = await updateEmployee(
-                employee?.employeeId, requestDto
-            );
-            if(res === 200){
-                open = false;
-                onSuccess();
-            }
+          // filter the request dto
+          filterProfessionalDetails();
+          filterSocialDetails();
+          //const request = requestDto.
+          setLoading(true);
+
+          //const res = await updateEmployee(employee?.employeeId, payload);
+          //console.log(res)
+          
         }catch(err){
             console.log(err);
         }finally{
             setLoading(false);
+            
         }
     }
+    useEffect(()=>{
+      setRequestDto(
+        {
+        firstName: employee?.firstName,
+        lastName: employee?.lastName,
+        cin : employee?.cin,
+        birthDate : employee?.birthDate,
+        familyStatus : employee?.familyStatus,
+        numberOfChildren : employee?.numberOfChildren,
+        nationality : employee?.nationality,
+        roles: employee?.roles,
+        // Employee Professional Details
+        professionalDetailsDto : {
+            matriculation : employee?.professionalDetails?.matriculation,
+            occupation : employee?.professionalDetails?.occupation,
+            department : employee?.professionalDetails?.department,
+            entity : employee?.professionalDetails?.entity,
+            managerId : employee?.professionalDetails.managerId,
+            joinDate : employee?.professionalDetails.joinDate,
+            site : employee?.professionalDetails.site,
+            professionalPhoneNumber : employee?.professionalDetails.professionalPhoneNumber,
+            professionalEmail : "",
+            professionalFixedPhoneNumber : employee?.professionalDetails.professionalFixedPhoneNumber,
+            extension : employee?.professionalDetails.extension
+        },
+        // Employee Social Details
+        socialDetailsDto : {
+            cnssNumber : employee?.socialDetails?.cnssNumber,
+            cimrNumber : employee?.socialDetails?.cimrNumber,
+            insuranceNumber : employee?.socialDetails?.insuranceNumber,
+            insuranceProvider : "SANLAM"
+        },
+        // Employee Contact Details
+        contactDetailsDto : {
+            personToCallInCaseOfEmergency : "",
+            emergencyContactNumber : ""
+        },
+        // Employee Balance Details
+        employeeBalance: {
+            year: new Date().getFullYear(),
+            annualBalance: 0,
+            accumulatedBalance: 0,
+            usedBalance: 0,
+        }
+        }
+      )
+    },[employee])
 
     useEffect(()=>{
         fetchManagers();
     },[])
 
+    useEffect(()=>{
+      console.log(payload);
+      console.log(employee?.["firstName"])
+    },[payload])
+
    return (
     <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
-      <DialogTitle>On-boarding</DialogTitle>
       <DialogContent sx={{ bgcolor: "#f7f8fa" }}>
         <Stack spacing={3} mt={1}>
           <Paper elevation={0} sx={{ p: 3, borderRadius: 2 }}>
@@ -186,17 +279,17 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
               </Grid>
               
               <Grid item xs={12} md={6}>
-                <TextField label="CIN" name="CIN" value={requestDto.CIN} onChange={handleChange} fullWidth required />
+                <TextField label="CIN" name="CIN" value={requestDto.cin} onChange={handleChange} fullWidth required />
               </Grid>
               
               <Grid item xs={12} md={6}>
                 <Select
-                value={requestDto.nationality}
+                value={employee?.nationality}
                 onChange={handleChange}
                 name="nationality"
                 displayEmpty
                 >
-                  <MenuItem disabled value="">
+                  <MenuItem disabled>
                   Nationalité
                 </MenuItem>
                 {countries.map((c)=>(
@@ -295,6 +388,7 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
                   <TextField
                   label={label}
                   name={name}
+                  value={requestDto.professionalDetailsDto[name]}
                   fullWidth
                   required
                   onChange={handleProfessionalDetailsChange}/>
@@ -310,7 +404,7 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
             
             <Grid container spacing={2}>
               <Grid item xs={12} md={6}>
-                <TextField label="N° CNSS" fullWidth name="cnssNumber" value={requestDto.socialDetailsDto.cnssNumber} onChange={handleSocialDetailsChange} />
+                <TextField label="N° CNSS" fullWidth name="cnssNumber" value={requestDto?.socialDetailsDto?.cnssNumber} onChange={handleSocialDetailsChange} />
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField label="N° CIMR" fullWidth name="cimrNumber" value={requestDto.socialDetailsDto.cimrNumber} onChange={handleSocialDetailsChange} />
@@ -387,7 +481,7 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
           Annuler
         </Button>
         <Button variant="contained" onClick={handleSubmit}>
-          {loading ? <CircularProgress size={22} /> : "Créer"}
+          {loading ? <CircularProgress size={22} /> : "Modifier"}
         </Button>
       </DialogActions>
     </Dialog>

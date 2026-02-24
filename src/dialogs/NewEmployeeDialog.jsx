@@ -234,7 +234,7 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
               
               <Grid item xs={12} md={6}>
                 <Select
-                value={requestDto.nationality}
+                value={requestDto?.nationality}
                 onChange={handleChange}
                 name="nationality"
                 displayEmpty
@@ -260,14 +260,6 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
                 required/>
               </Grid>
               
-              <Grid item xs={12} md={6}>
-                <TextField 
-                label="Nombre d’enfants" 
-                type="number" name="numberOfChildren" 
-                fullWidth 
-                value={requestDto.numberOfChildren} 
-                onChange={(e)=> setRequestDto((prev)=> ({...prev, ["numberOfChildren"] : parseInt(e.target.value)}))} required />
-              </Grid>
               <Grid item xs={12} md={6}>
                 <TextField 
                 label="Nombre d’enfants" 
@@ -305,6 +297,7 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
                 ["Département", "department"],
                 ["Entité", "entity"],
                 ["Manager Direct", "managerName"],
+                ["Date d’embauche", "joinDate"],
                 ["Site", "site"],
                 ["Téléphone pro", "professionalPhoneNumber"],
                 ["Fixe pro", "professionalFixedPhoneNumber"],
@@ -343,6 +336,18 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
                     <MenuItem value={d.value}>{d.label}</MenuItem>
                   ))}
                  </Select>
+                 </FormControl>
+                 : label === "Date d’embauche" ? 
+                 <FormControl sx={{ minWidth: 140 }}>
+                  <TextField
+                  label="Date d’embauche"
+                  name="joinDate"
+                  onChange={handleProfessionalDetailsChange}
+                  value={requestDto.professionalDetailsDto.joinDate}
+                  type="date"
+                  InputLabelProps={{ shrink: true }}
+                  fullWidth
+                  required/>
                  </FormControl>
                   :
                  label === "Entité" ? 
