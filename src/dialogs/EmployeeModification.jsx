@@ -82,10 +82,6 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
             }
         }))
     }
-    const [updatedFields, setUpdatedFields] = useState({});
-    
-    const [error, setError] = useState("");
-    const [udpateSuccess, setUpdateSuccess] = useState(); 
     const [loading, setLoading] = useState(false);
 
     const fetchManagers = async() =>{
