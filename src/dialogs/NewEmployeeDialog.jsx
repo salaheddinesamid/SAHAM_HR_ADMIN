@@ -113,14 +113,12 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
     },
   });
 
-
-
-
+  // Handle change personal details
   const handleChange = (e) => {
     const { name, value } = e.target;
     setRequestDto((prev) => ({ ...prev, [name]: value }));
   };
-
+  // Handle change the balance
   const handleBalanceChange = (e) => {
     const { name, value } = e.target;
     setRequestDto((prev) => ({
@@ -156,6 +154,10 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
     ))
   }
 
+  /**
+   * Handle change contact details
+   * @param {*} e 
+   */
   const handleContactDetailsChange = (e) =>{
     const {name, value} = e.target;
     setRequestDto((prev)=>(
@@ -173,8 +175,19 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
         : [...prev.roles, roleName], // otherwise, the new role will be pushed
     }));
   };
-  //const isPasswordValid = 
 
+  // Check if the professional email is valid
+  const isEmailValid = () =>{
+    if(!requestDto?.professionalDetailsDto?.professionalEmail){
+      return;
+    }
+    const splitEmail = requestDto?.professionalDetailsDto?.professionalEmail.split("@");
+    if(splitEmail[1].toLocaleLowerCase() !== "saham.com"){
+      return false;
+    }
+    return true;
+  }
+  // Check if the form is valid
   const isFormValid =
     requestDto.firstName &&
     requestDto.lastName &&
@@ -182,7 +195,9 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
     requestDto.entity &&
     requestDto.occupation &&
     requestDto.roles.length > 0 &&
-    requestDto.professionalDetailsDto.managerId !== null
+    requestDto.professionalDetailsDto.managerId !== null &&
+    requestDto.professionalDetailsDto.joinDate !== null &&
+    requestDto.professionalDetailsDto.matriculation !== null
 
 
   const handleSubmit = async () => {
@@ -293,6 +308,7 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
             
             <Grid container spacing={2}>
               {[
+                ["Matriculation Interne", "matriculation"],
                 ["Poste", "occupation"],
                 ["Département", "department"],
                 ["Entité", "entity"],
@@ -359,6 +375,19 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
                     <MenuItem value={e.value}>{e.label}</MenuItem>
                   ))}
                  </Select>
+                 </FormControl>
+                 : name === "professionalEmail" ? 
+                 <FormControl sx={{ minWidth: 140 }}>
+                  <TextField
+                  label="Email professionelle"
+                  name="professionalEmail"
+                  onChange={handleProfessionalDetailsChange}
+                  value={requestDto.professionalDetailsDto.professionalEmail}
+                  type="email"
+                  InputLabelProps={{ shrink: true }}
+                  fullWidth
+                  required/>
+                  {!isEmailValid()  ? <p style={{color : 'red'}}>Veuillez saisir une adresse e-mail valide appartenant au domaine (SAHAM).</p> : null}
                  </FormControl>
                   :
                  <Grid item xs={12} md={12} key={name}>
@@ -456,7 +485,7 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
         <Button onClick={onClose} color="inherit">
           Annuler
         </Button>
-        <Button variant="contained" onClick={handleSubmit}>
+        <Button variant="contained" onClick={handleSubmit} disabled={!isFormValid}>
           {loading ? <CircularProgress size={22} /> : "Créer"}
         </Button>
       </DialogActions>
