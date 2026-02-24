@@ -72,7 +72,7 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
     firstName: "",
     lastName: "",
     sex : "",
-    CIN : "",
+    cin : "",
     birthDate : "",
     familyStatus : "",
     numberOfChildren : 0,
@@ -229,7 +229,7 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
               </Grid>
               
               <Grid item xs={12} md={6}>
-                <TextField label="CIN" name="CIN" value={requestDto.CIN} onChange={handleChange} fullWidth required />
+                <TextField label="CIN" name="cin" value={requestDto.CIN} onChange={handleChange} fullWidth required />
               </Grid>
               
               <Grid item xs={12} md={6}>
