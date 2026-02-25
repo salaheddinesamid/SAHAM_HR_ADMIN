@@ -1,8 +1,23 @@
-import { Box, Button, Checkbox, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControlLabel, Grid,  MenuItem, Paper, Select, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Checkbox, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, Grid,  InputLabel,  MenuItem, Paper, Select, Stack, TextField, Typography } from "@mui/material";
 import countries from "../nationalities.json"
 import { useEffect, useState } from "react"
 import { getAllManagers, updateEmployee} from "../services/EmployeeService";
 
+const departments = [
+    { id : 1, label : "Département financier", value : "FINANCE_DEPARTMENT"},
+    { id : 2, label : "Département juridique", value : "LEGAL_DEPARTMENT" },
+    { id : 3, label : "Département informatique", value : "IT"},
+    { id : 4, label : "Département ressources humaines", value : "HUMAN_RESOURCES_DEPARTMENT" },
+    { id : 5, label : "Opérations", value : "OPERATIONS"},
+    { id : 6, label : "Asset management", value : "ASSET_MANAGEMENT" },
+    { id : 7, label : "Cabinet du DG", value : "CEO_OFFICE" },
+    { id : 8, label : "Surveillance bancaire", value : "BANKING_SUPERVISION" },
+]
+const entities  = [
+    { id : 1, label : "SAHAM Horizon", value : "SAHAM_HORIZON"},
+    { id : 2, label : "SAHAM Finances", value : "SAHAM_FINANCES"},
+    { id : 3, label : "SAHAM Foundation", value : "SAHAM_FOUNDATION"}
+]
 
 export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose, onSuccess, roles})=>{
   // List of managers
@@ -188,7 +203,7 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
           setLoading(true);
           const res = await updateEmployee(employee?.employeeId, payload);
           console.log(res)
-          if(res === 200){
+          if(res?.status === 200){
             onSuccess();
             onClose();
           }
@@ -386,6 +401,26 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
                       </MenuItem>
                     ))}
                   </Select>
+                  : name === "department" ? 
+                  <FormControl sx={{ minWidth: 140 }}>
+                    <InputLabel id="department-label">Département</InputLabel>
+                    <Select name="department" value={requestDto.professionalDetailsDto.department} onChange={handleProfessionalDetailsChange}>
+                      <MenuItem disabled value="">Département</MenuItem>
+                      {departments.map((d)=>(
+                        <MenuItem value={d.value}>{d.label}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  : name === "entity" ? 
+                  <FormControl sx={{ minWidth: 140 }}>
+                    <InputLabel id="entity-label">Entité</InputLabel>
+                    <Select name="entity" value={requestDto.professionalDetailsDto.entity} onChange={handleProfessionalDetailsChange}>
+                      <MenuItem disabled value="">Département</MenuItem>
+                      {entities.map((e)=>(
+                        <MenuItem value={e.value}>{e.label}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
 
                  : <Grid item xs={12} md={12} key={name}>
                   <TextField
