@@ -183,20 +183,21 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
      * Submit the request to the server
      */
     const handleSubmit = async ()=>{
-        try{
-          // filter the request dto
-          filterProfessionalDetails();
-          filterSocialDetails();
+        try {
           //const request = requestDto.
           setLoading(true);
-
-          //const res = await updateEmployee(employee?.employeeId, payload);
-          //console.log(res)
+          const res = await updateEmployee(employee?.employeeId, payload);
+          console.log(res)
+          if(res === 200){
+            onSuccess();
+            onClose();
+          }
           
         }catch(err){
             console.log(err);
         }finally{
             setLoading(false);
+            
             
         }
     }
@@ -251,6 +252,12 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
     useEffect(()=>{
         fetchManagers();
     },[])
+
+    useEffect(()=>{
+      // filter the request dto
+      filterProfessionalDetails();
+      filterSocialDetails();
+    },[requestDto])
 
     useEffect(()=>{
       console.log(payload);
