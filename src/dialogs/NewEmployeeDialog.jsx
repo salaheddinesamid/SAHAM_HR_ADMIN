@@ -73,6 +73,7 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
     lastName: "",
     sex : "",
     cin : "",
+    address : "",
     birthDate : "",
     familyStatus : "",
     numberOfChildren : 0,
@@ -181,8 +182,8 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
     if(!requestDto?.professionalDetailsDto?.professionalEmail){
       return;
     }
-    const splitEmail = requestDto?.professionalDetailsDto?.professionalEmail.split("@");
-    if(splitEmail[1].toLocaleLowerCase() !== "saham.com"){
+    const splitEmail = requestDto?.professionalDetailsDto?.professionalEmail?.split("@");
+    if(splitEmail[1]?.toLocaleLowerCase() !== "saham.com"){
       return false;
     }
     return true;
@@ -297,6 +298,14 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
                       {s.label}
                     </MenuItem>))}
                 </Select>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField 
+                label="Address" 
+                type="text" name="address" 
+                fullWidth 
+                value={requestDto.address} 
+                onChange={handleChange} required />
               </Grid>
             </Grid>
           </Paper>
@@ -485,7 +494,7 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
         <Button onClick={onClose} color="inherit">
           Annuler
         </Button>
-        <Button variant="contained" onClick={handleSubmit} disabled={!isFormValid}>
+        <Button variant="contained" onClick={handleSubmit}>
           {loading ? <CircularProgress size={22} /> : "Créer"}
         </Button>
       </DialogActions>
