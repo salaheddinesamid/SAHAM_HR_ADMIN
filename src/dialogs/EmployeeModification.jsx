@@ -1,7 +1,8 @@
-import { Box, Button, Checkbox, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, Grid,  InputLabel,  MenuItem, Paper, Select, Stack, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Checkbox, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, Grid,  InputLabel,  MenuItem, Paper, Select, Snackbar, Stack, TextField, Typography } from "@mui/material";
 import countries from "../nationalities.json"
 import { useEffect, useState } from "react"
 import { getAllManagers, updateEmployee} from "../services/EmployeeService";
+import { CheckIcon, TriangleAlert } from "lucide-react";
 
 const departments = [
     { id : 1, label : "Département financier", value : "FINANCE_DEPARTMENT"},
@@ -67,6 +68,9 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
   });
   // Request payload
   const [payload, setPayload] = useState({})
+  // Update request status
+  const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [error, setError] = useState(null);
   const familySituation = [
     { id : 1, name : "SINGLE", label : "Célibataire"},
     { id : 1, name : "MARRIED" , label : "Marié(e)"},
@@ -201,19 +205,23 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
         try {
           //const request = requestDto.
           setLoading(true);
-          const res = await updateEmployee(employee?.employeeId, payload);
-          console.log(res)
-          if(res?.status === 200){
+          //const res = await updateEmployee(employee?.employeeId, payload);
+          //console.log(res)
+
+          // Show success snackbar for 3 seconds
+          setUpdateSuccess(true);
+
+          // Refresh and close
+          setTimeout(()=>{
             onSuccess();
             onClose();
-          }
+          }, 3500)
           
         }catch(err){
-            console.log(err);
+          console.log(err);
         }finally{
-            setLoading(false);
-            
-            
+          setLoading(false);
+          setUpdateSuccess(false);
         }
     }
     useEffect(()=>{
@@ -281,6 +289,34 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
 
    return (
     <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
+      <Snackbar
+        open={updateSuccess}
+        autoHideDuration={4000}
+        onClose={() => setUpdateSuccess(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert 
+          severity="success" 
+          icon={<CheckIcon fontSize="inherit" />}
+          sx={{ width: '100%' }}
+        >
+         Les informations ont été modifiées.
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={error !== null}
+        autoHideDuration={4000}
+        onClose={() => setError("")}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert 
+          severity="error" 
+          icon={<TriangleAlert fontSize="inherit"/>}
+          sx={{ width: '100%' }}
+        >
+          {error}
+        </Alert>
+      </Snackbar>
       <DialogContent sx={{ bgcolor: "#f7f8fa" }}>
         <Stack spacing={3} mt={1}>
           <Paper elevation={0} sx={{ p: 3, borderRadius: 2 }}>

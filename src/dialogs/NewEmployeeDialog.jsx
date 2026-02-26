@@ -17,10 +17,13 @@ import {
   DialogTitle,
   InputLabel,
   FormControl,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import countries from "../nationalities.json"
 import { addEmployee, getAllManagers, verifyManager } from "../services/EmployeeService";
+import { CheckIcon, TriangleAlert } from "lucide-react";
 
 const departments = [
     { id : 1, label : "Département financier", value : "FINANCE_DEPARTMENT"},
@@ -55,6 +58,8 @@ const genders = [
 
 export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(null);
   const [managers, setManagers] = useState([]);
   const [selectedManager, setSelectedManager] = useState(null);
 
@@ -208,7 +213,12 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
       console.log(requestDto);
       onSuccess?.();
       onClose();
-    } finally {
+
+    }catch(err){
+      console.log(err);
+      setError(err?.message);
+    } 
+    finally {
       setLoading(false);
     }
   };
@@ -220,6 +230,31 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
+      <Snackbar
+      open={success}
+      autoHideDuration={4000}
+      onClose={() => setSuccess(false)}
+      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+        <Alert
+        severity="success" 
+        icon={<CheckIcon fontSize="inherit" />}
+        sx={{ width: '100%' }}>
+          Le collaborateur a été bien enregistré.
+        </Alert>
+      </Snackbar>
+        
+      <Snackbar
+        open={error !== null}
+        autoHideDuration={4000}
+        onClose={() => setError(null)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+          <Alert 
+          severity="error" 
+          icon={<TriangleAlert fontSize="inherit"/>}
+          sx={{ width: '100%' }}>
+            {error}
+          </Alert>
+      </Snackbar>
       <DialogTitle>On-boarding</DialogTitle>
       <DialogContent sx={{ bgcolor: "#f7f8fa" }}>
         <Stack spacing={3} mt={1}>
