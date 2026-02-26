@@ -321,8 +321,8 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
               </Grid>
               <Grid item xs={12} md={6}>
                 <Select
-                value={requestDto.familySituation || ""}
-                name="familySituation"
+                value={requestDto.familyStatus || ""}
+                name="familyStatus"
                 displayEmpty
                 onChange={handleChange}>
                    <MenuItem disabled value="">

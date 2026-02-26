@@ -26,5 +26,6 @@ PayrollAPI.interceptors.response.use(
         if (error.response.errorCode === "JWT_EXPIRED"){
             handleExpiredJWT();
         }
+        return Promise.reject(error);
     }
 )

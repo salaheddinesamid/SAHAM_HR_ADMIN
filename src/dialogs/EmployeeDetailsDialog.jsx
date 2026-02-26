@@ -13,6 +13,7 @@ import {
   IconButton
 } from "@mui/material";
 import { X } from "lucide-react";
+import { mapEmployeeFamilyStatus } from "../utils/EmployeeUtils";
 
 export const EmployeeDetailsDialog = ({ employee, open, onClose }) => {
 
@@ -41,22 +42,34 @@ export const EmployeeDetailsDialog = ({ employee, open, onClose }) => {
             <Info label="Nationalité" value={employee?.nationality} />
             <Info label="Date de naissance" value={employee?.birthDate} />
             <Info label="Email" value={employee.email} />
-
-            <Info label="Situation Familiale" value={employee.familyStatus} />
-            <Info label="Matricule" value={employee.matriculation} />
+            <Info label="Situation Familiale" value={mapEmployeeFamilyStatus(employee?.familyStatus)} />
+            <Info label="Nombre d’enfants" value={employee?.numberOfChildren} />
+            <Info label="Address" value={employee?.address} />
           </Grid>
         </Section>
 
         <Section title="Informations professionnelles">
           <Grid container spacing={2}>
-            <Info label="Entité" value={employee.entity} />
-            <Info label="Poste" value={employee.occupation} />
-            <Info label="Manager" value={employee.managerName || "-"} />
-            <Info label="Date d’embauche" value={employee.joinDate} />
+            <Info label="Matriculation" value={employee?.professionalDetails?.matriculation} />
+            <Info label="Entité" value={employee?.professionalDetails?.entity} />
+            <Info label="Poste" value={employee?.professionalDetails?.occupation} />
+            <Info label="Manager" value={employee?.professionalDetails?.managerName || "-"} />
+            <Info label="Téléphone pro" value={employee?.professionalDetails?.professionalPhoneNumber || "-"} />
+            <Info label="Fixe pro" value={employee?.professionalDetails?.professionalFixedPhoneNumber || "-"} />
+            <Info label="Extension" value={employee?.professionalDetails?.extension || "-"} />
+            <Info label="Date d’embauche" value={employee?.professionalDetails?.joinDate} />
+            <Info label="Email pro" value={employee?.professionalDetails?.professionalEmail} />
+          </Grid>
+        </Section>
+        <Section title="Informations administratives & sociales">
+          <Grid container spacing={2}>
+            <Info label="N° CNSS" value={employee?.socialDetails?.cnssNumber} />
+            <Info label="N° CIMR" value={employee?.socialDetails?.cimrNumber} />
+            <Info label="N° Mutuelle / Assurance santé" value={employee?.socialDetails?.insuranceNumber} />
           </Grid>
         </Section>
         {employee.balanceDetails && (
-          <Section title="Solde de congé">
+          <Section title={`Solde de congé (${employee?.balanceDetails?.year})`}>
             <Grid container spacing={2}>
               <BalanceCard label="Annuel" value={employee.balanceDetails.annualBalance} />
               <BalanceCard label="Utilisé" value={employee.balanceDetails.usedBalance} />

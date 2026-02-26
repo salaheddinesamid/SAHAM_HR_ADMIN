@@ -5,6 +5,8 @@ import { CloudUpload } from "lucide-react";
 import axios from "axios";
 import LinearWithValueLabel from "../components/PercentageProgress";
 
+import Cookies from "js-cookie";
+
 export const NewPayrollDialog = ({open, onClose, onSuccess})=>{
     // Selected month of the payroll
     const [selectedMonth, setSelectedMonth] = useState(0);
@@ -34,6 +36,7 @@ export const NewPayrollDialog = ({open, onClose, onSuccess})=>{
      * 
      */
     const handleSubmit = async() =>{
+        const accessToken = Cookies.get("accessToken");
         try{
             setProgress(0);
             // construct key-value request body
@@ -45,6 +48,9 @@ export const NewPayrollDialog = ({open, onClose, onSuccess})=>{
             await axios.post(
                 `${process.env.REACT_APP_SERVER_URL}/api/v1/payrolls/upload`,
                 formData,
+                {
+                    headers : `Bearer ${accessToken}`
+                },
                 {
                     params: {
                         month: month,

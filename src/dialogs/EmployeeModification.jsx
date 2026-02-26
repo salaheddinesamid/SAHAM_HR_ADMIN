@@ -201,29 +201,29 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
     /**
      * Submit the request to the server
      */
-    const handleSubmit = async ()=>{
-        try {
-          //const request = requestDto.
-          setLoading(true);
-          //const res = await updateEmployee(employee?.employeeId, payload);
-          //console.log(res)
+    const handleSubmit = async () => {
+  try {
+    setLoading(true);
 
-          // Show success snackbar for 3 seconds
-          setUpdateSuccess(true);
+    const res = await updateEmployee(employee?.employeeId, payload);
 
-          // Refresh and close
-          setTimeout(()=>{
-            onSuccess();
-            onClose();
-          }, 3500)
-          
-        }catch(err){
-          console.log(err);
-        }finally{
-          setLoading(false);
-          setUpdateSuccess(false);
-        }
+    if (res === 200) {
+      setUpdateSuccess(true);
+
+      // Wait 3.5 seconds before closing
+      setTimeout(() => {
+        onSuccess();
+        onClose();
+        setUpdateSuccess(false); // reset AFTER closing
+      }, 3500);
     }
+
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
     useEffect(()=>{
       setRequestDto(
         {
@@ -284,7 +284,6 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
 
     useEffect(()=>{
       console.log(payload);
-      console.log(employee?.["firstName"])
     },[payload])
 
    return (
@@ -363,15 +362,6 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
                 fullWidth
                 required/>
               </Grid>
-              
-              <Grid item xs={12} md={6}>
-                <TextField 
-                label="Nombre d’enfants" 
-                type="number" name="numberOfChildren" 
-                fullWidth 
-                value={requestDto.numberOfChildren} 
-                onChange={(e)=> setRequestDto((prev)=> ({...prev, ["numberOfChildren"] : parseInt(e.target.value)}))} required />
-              </Grid>
               <Grid item xs={12} md={6}>
                 <TextField 
                 label="Nombre d’enfants" 
@@ -385,7 +375,7 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
                 className="form-select"
                 style={{ fontSize: "12px" }}
                 value={requestDto.familySituation || ""}
-                name="familySituation"
+                name="familyStatus"
                 onChange={handleChange}>
                   <option value="">Situation familiale</option>
                   {familySituation.map((s) => (
