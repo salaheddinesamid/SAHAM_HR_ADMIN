@@ -19,12 +19,12 @@ export const EmployeeDetailsDialog = ({ employee, open, onClose }) => {
   if (!employee) return null;
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
         <DialogTitle sx={{ m: 0, p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-                {employee.fullName}
-            </Typography>
-            <IconButton
+          <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+            {employee.fullName}
+          </Typography>
+          <IconButton
             aria-label="close"
             onClick={onClose} // This is crucial!
             sx={{ color: (theme) => theme.palette.grey[500] }}>
@@ -35,7 +35,14 @@ export const EmployeeDetailsDialog = ({ employee, open, onClose }) => {
       <DialogContent>
         <Section title="Informations personnelles">
           <Grid container spacing={2}>
+            <Info label="Nom" value={employee?.lastName} />
+            <Info label="Prénom" value={employee?.firstName} />
+            <Info label="CIN" value={employee?.cin} />
+            <Info label="Nationalité" value={employee?.nationality} />
+            <Info label="Date de naissance" value={employee?.birthDate} />
             <Info label="Email" value={employee.email} />
+
+            <Info label="Situation Familiale" value={employee.familyStatus} />
             <Info label="Matricule" value={employee.matriculation} />
           </Grid>
         </Section>
