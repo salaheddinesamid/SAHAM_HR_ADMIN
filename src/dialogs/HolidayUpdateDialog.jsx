@@ -32,18 +32,16 @@ export const HolidayUpdateDialog = ({holiday, open, onClose, onSuccess})=>{
     const handleSubmit = async()=>{
         try{
             setLoading(true);
-            const res = await updateHoliday(holiday?.name, holiday?.type,requestDto);
-            console.log(requestDto);
-            setSuccess(true);
-            setTimeout(()=>{
+            const res = await updateHoliday(holiday?.id, holiday?.type, requestDto);
+            if(res === 200){
                 onSuccess();
-            }, 3000)
+                onClose();
+            }
         }catch(err){
             console.log(err);
         }finally{
             setLoading(false);
-            cleanDto();
-            onClose();
+            console.log(requestDto);
         }
     }
 

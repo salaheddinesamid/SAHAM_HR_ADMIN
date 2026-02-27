@@ -13,8 +13,13 @@ export const getAllHolidays = async()=>{
  * @param {*} requestDto 
  * @returns 
  */
-export const updateHoliday = async(name, requestDto)=>{
-    const repsonse = await HolidaysAPI.patch(`/update/${name}`, requestDto);
+export const updateHoliday = async(id, type, requestDto)=>{
+    const repsonse = await HolidaysAPI.patch(`update`, requestDto, {
+        params : {
+            id : id,
+            type : type
+        }
+    });
     return repsonse.status;
 }
 /**
