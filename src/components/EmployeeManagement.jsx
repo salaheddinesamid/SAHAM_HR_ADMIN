@@ -123,10 +123,10 @@ export const EmployeeManagement = () => {
             <TableBody>
               {employees.map((employee) => (
                 <TableRow key={employee.employeeId} hover>
-                  <TableCell>{employee.matriculation}</TableCell>
+                  <TableCell>{employee.professionalDetails?.matriculation}</TableCell>
                   <TableCell>{employee.fullName}</TableCell>
-                  <TableCell>{employee.occupation}</TableCell>
-                  <TableCell>{employee.entity}</TableCell>
+                  <TableCell>{employee?.professionalDetails?.occupation}</TableCell>
+                  <TableCell>{employee?.professionalDetails?.entity}</TableCell>
                   <TableCell>{employee.email}</TableCell>
                   <TableCell align="right">
                     <Tooltip title="Modifier" onClick={()=> handleOpenUpdateDialog(employee)}>

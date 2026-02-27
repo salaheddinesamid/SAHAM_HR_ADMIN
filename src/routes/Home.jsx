@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { adminServices } from "./AdminServices";
 import { useAdminService } from "../context/ViewContext";
 import { UserProfile } from "../components/UserProfile";
+import { ProfileManagement } from "../components/ProfileManagement";
 
 export const AdminDashboard = () => {
   const [openServices, setOpenServices] = useState([]);
@@ -99,8 +100,8 @@ export const AdminDashboard = () => {
           <div className="header-right d-flex">
             <div className="notification">
               <NotificationsIcon />
-            </div>
-            <UserProfile />
+            </div>  
+              <UserProfile />
           </div>
         </div>
 

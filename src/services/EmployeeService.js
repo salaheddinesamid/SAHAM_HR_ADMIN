@@ -6,7 +6,7 @@ import EmployeeApi from "../apis/EmployeeAPI"
  * @returns 
  */
 export const getEmployee = async(email)=>{
-    const response = await EmployeeApi.get(`/get?email=${email}`);
+    const response = await EmployeeApi.get(`/profile/get?email=${email}`);
     return response.data;
 }
 /**
@@ -76,4 +76,33 @@ export const verifyManager = async(managerName)=>{
 export const getAllManagers = async()=>{
     const response = await EmployeeApi.get("managers/get_all");
     return response.data;
+}
+
+/**
+ * 
+ * @param {*} email 
+ * @param {*} request 
+ * @returns 
+ */
+export const updatePassword = async(email, request) =>{
+    const response = await EmployeeApi.put("update/password", request, {
+        params : {
+            email : email
+        }
+    });
+    return response.status;
+}
+
+/**
+ * 
+ * @param {*} image 
+ * @returns 
+ */
+export const uploadProfilePicture = async(image) =>{
+    const response = await EmployeeApi.patch("update/profile-picture/", image, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        }
+    });
+    return response.status;
 }
