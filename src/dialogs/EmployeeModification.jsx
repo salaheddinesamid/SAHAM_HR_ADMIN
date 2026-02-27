@@ -374,7 +374,7 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
                 <select
                 className="form-select"
                 style={{ fontSize: "12px" }}
-                value={requestDto.familySituation || ""}
+                value={requestDto.familyStatus || ""}
                 name="familyStatus"
                 onChange={handleChange}>
                   <option value="">Situation familiale</option>
