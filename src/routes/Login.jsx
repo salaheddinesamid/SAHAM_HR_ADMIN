@@ -38,8 +38,8 @@ export const AdminLoginPage = () => {
 
     Cookies.set("accessToken", accessToken, {
       expires: 1,
-      secure: true,
-      sameSite: "Strict",
+      secure: false,
+      sameSite: "Lax",
     });
 
     localStorage.setItem("userDetails", JSON.stringify(userDetails));
