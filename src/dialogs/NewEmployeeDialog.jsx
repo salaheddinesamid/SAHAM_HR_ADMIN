@@ -22,7 +22,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import countries from "../nationalities.json"
-import { addEmployee, getAllManagers, verifyManager } from "../services/EmployeeService";
+import { addEmployee, getAllManagers} from "../services/EmployeeService";
 import { CheckIcon, TriangleAlert } from "lucide-react";
 
 const departments = [
@@ -61,12 +61,10 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
   const [managers, setManagers] = useState([]);
-  const [selectedManager, setSelectedManager] = useState(null);
 
   const fetchManagers = async() =>{
     try{
       const res = await getAllManagers();
-      console.log(res);
       setManagers(res);
     }catch(err){
       console.log(err);
@@ -210,7 +208,6 @@ export const NewEmployeeDialog = ({ open, onClose, onSuccess }) => {
     try {
       setLoading(true);
       const res = await addEmployee(requestDto);
-      console.log(requestDto);
       onSuccess?.();
       onClose();
 

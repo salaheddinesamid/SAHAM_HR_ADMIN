@@ -151,11 +151,6 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
      */
     const handleBalanceChange = (e)=>{
       const {name, value} = e.target;
-      setEmployee((prev)=>(
-        {...prev, balanceDetails : {
-          ...prev.balanceDetails, [name] : Math.max(0, Number(value))
-        }}
-      ))
       setRequestDto((prev)=>(
         {...prev, employeeBalance : {
           ...prev.employeeBalance, [name] : Math.max(0, Number(value))
@@ -166,7 +161,7 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
     // Filter the updated fields in the social details
     const filterSocialDetails = () =>{
       const dto = requestDto?.socialDetailsDto || {};
-      const socialDetails = employee?.socialeDetails || {};
+      const socialDetails = employee?.socialDetails || {};
       
       const filteredDto = Object.fromEntries(
         Object.entries(dto).filter(
@@ -196,34 +191,48 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
           professionalDetailsDto: filteredDto
         }));
       }
-      
     };
+
+    const filterBalanceDetails = () =>{
+      const dto = requestDto?.employeeBalance || {};
+      const balanceDetails = employee?.balanceDetails || {};
+
+      const filteredDto = Object.fromEntries(
+        Object.entries(dto).filter(
+          ([key, value]) => value != balanceDetails[key]
+        )
+      )
+      if (Object.keys(filteredDto).length > 0) {
+        setPayload((prev) => ({
+          ...prev,
+          employeeBalance: filteredDto
+        }));
+      }
+    }
     /**
      * Submit the request to the server
      */
     const handleSubmit = async () => {
-  try {
-    setLoading(true);
-
-    const res = await updateEmployee(employee?.employeeId, payload);
-
-    if (res === 200) {
-      setUpdateSuccess(true);
-
-      // Wait 3.5 seconds before closing
-      setTimeout(() => {
-        onSuccess();
-        onClose();
-        setUpdateSuccess(false); // reset AFTER closing
-      }, 3500);
-    }
-
-  } catch (err) {
-    console.error(err);
-  } finally {
-    setLoading(false);
-  }
-};
+      try {
+        
+        setLoading(true);
+        const res = await updateEmployee(employee?.employeeId, payload);
+        
+        if (res === 200) {
+          setUpdateSuccess(true);
+          // Wait 3.5 seconds before closing
+          setTimeout(() => {
+            onSuccess();
+            onClose();
+            setUpdateSuccess(false); // reset AFTER closing
+          }, 3500);
+        }
+      }catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
     useEffect(()=>{
       setRequestDto(
         {
@@ -280,11 +289,8 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
       // filter the request dto
       filterProfessionalDetails();
       filterSocialDetails();
+      filterBalanceDetails();
     },[requestDto])
-
-    useEffect(()=>{
-      console.log(payload);
-    },[payload])
 
    return (
     <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
