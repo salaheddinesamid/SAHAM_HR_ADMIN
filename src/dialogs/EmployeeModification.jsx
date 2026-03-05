@@ -273,9 +273,11 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
         // Employee Balance Details
         employeeBalance: {
             year: new Date().getFullYear(),
-            annualBalance: 0,
-            accumulatedBalance: 0,
-            usedBalance: 0,
+            annualBalance: employee?.balanceDetails?.annualBalance,
+            accumulatedBalance: employee?.balanceDetails?.accumulatedBalance,
+            usedBalance: employee?.balanceDetails?.usedBalance,
+            remainderBalance : employee?.balanceDetails?.remainderBalance,
+            previousYearBalance : employee?.balanceDetails?.previousYearBalance
         }
         }
       )
@@ -513,18 +515,22 @@ export const EmployeeModificationDialog = ({employee, setEmployee, open, onClose
             
             <Grid container spacing={2}>
               <Grid item xs={12} md={3}>
-                <TextField label="Année" type="number" fullWidth name="year" value={requestDto.employeeBalance.year} onChange={handleBalanceChange} />
+                <TextField label="Année" type="text" fullWidth name="year" value={requestDto.employeeBalance.year} aria-readonly/>
+              </Grid>
+
+              <Grid item xs={12} md={3}>
+                <TextField label={`Solde ${new Date().getFullYear() - 1}`} type="number" fullWidth name="previousYearBalance" value={requestDto.employeeBalance.previousYearBalance} aria-readonly/>
               </Grid>
               
               <Grid item xs={12} md={3}>
-                <TextField label="Solde annuel" type="number" fullWidth name="annualBalance" value={requestDto.employeeBalance.annualBalance} onChange={handleBalanceChange}/>
+                <TextField label="Droit annuel" type="number" fullWidth name="annualBalance" value={requestDto.employeeBalance.annualBalance} onChange={handleBalanceChange}/>
               </Grid>
               
               <Grid item xs={12} md={3}>
-                <TextField label="Solde cumulé" type="number" fullWidth name="accumulatedBalance" value={requestDto.employeeBalance.accumulatedBalance} onChange={handleBalanceChange}/>
+                <TextField label="Jours cumulé" type="number" fullWidth name="accumulatedBalance" value={requestDto.employeeBalance.accumulatedBalance} onChange={handleBalanceChange}/>
               </Grid>
               <Grid item xs={12} md={3}>
-                <TextField label="Solde utilisé" type="number" fullWidth name="usedBalance" value={requestDto.employeeBalance.usedBalance} onChange={handleBalanceChange}/>
+                <TextField label="Pris" type="number" fullWidth name="usedBalance" value={requestDto.employeeBalance.usedBalance} onChange={handleBalanceChange}/>
               </Grid>
             </Grid>
           </Paper>
