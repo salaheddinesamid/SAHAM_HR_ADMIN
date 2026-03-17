@@ -203,7 +203,7 @@ export const EmployeeDetailsDialog = ({ employee, open, onClose }) => {
 
             {activeTab === "balance" && bd && (
               <Section title={`Solde de congé — Exercice ${bd.year}`}>
-                <div className="balance-grid">
+                <div className="info-grid">
                   <div className="balance-card annual">
                     <div className="balance-number">{bd.annualBalance}<span className="balance-unit">j</span></div>
                     <div className="balance-label">Droit annuel</div>
