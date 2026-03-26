@@ -67,6 +67,7 @@ export const EmployeeManagement = () => {
       const res = await getAllEmployees(page, pageSize);
       setEmployees(res?.content || []);
       setTotalElements(res?.totalElements || 0);
+      console.log(res);
     } catch (err) {
       console.error(err);
     } finally {

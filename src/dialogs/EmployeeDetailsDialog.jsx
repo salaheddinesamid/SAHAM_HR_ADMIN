@@ -17,6 +17,7 @@ import {
 import { X } from "lucide-react";
 import "../styles/EmployeeDetailsDialog.css"
 import { useState } from "react";
+import { reActivateAccount } from "../services/AuthService";
 
 const icons = {
   close: "M18 6L6 18M6 6l12 12",
@@ -50,6 +51,8 @@ const InfoCard = ({ label, value, mono }) => (
 
 
 export const EmployeeDetailsDialog = ({ employee, open, onClose }) => {
+  const [activationLoading, setActivationLoading] = useState(false);
+  const [activationError, setActivationError] = useState("");
   
   const [activeTab, setActiveTab] = useState("personal")
   if (!employee) return null; 
@@ -58,9 +61,22 @@ export const EmployeeDetailsDialog = ({ employee, open, onClose }) => {
   const pd = emp.professionalDetails || {};
   const sd = emp.socialDetails || {};
   const bd = emp.balanceDetails;
+
+  const handleActivateAccount = async() =>{
+    try{
+      setActivationLoading(true);
+      const employeeEmail = employee?.professionalDetails?.professionalEmail
+      const res = await reActivateAccount(employeeEmail);
+    }catch(err){
+      setActivationError(err);
+      console.log(err);
+    }finally{
+      setActivationLoading(false)
+    }
+  }
   
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl" style={{height : "800px"}}>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl" style={{height : "90%"}}>
       <DialogTitle
         sx={{
           position: "sticky",
@@ -87,8 +103,8 @@ export const EmployeeDetailsDialog = ({ employee, open, onClose }) => {
             <Box display="flex" gap={1} mt={0.5}>
               
               <Chip
-                label={employee.accountLocked ? "Compte verrouillé" : "Compte actif"}
-                color={employee.accountLocked ? "error" : "success"}
+                label={!employee.accountActive ? "Compte verrouillé" : "Compte actif"}
+                color={!employee.accountActive ? "error" : "success"}
                 size="small"
               />
 
@@ -237,13 +253,15 @@ export const EmployeeDetailsDialog = ({ employee, open, onClose }) => {
             Réinitialiser mot de passe
           </Button>
 
-          <Button
+          {!employee.accountActive && (
+            <Button
             variant="contained"
-            color={employee?.accountLocked ? "success" : "warning"}
+            color={"warning"}
+            onClick={handleActivateAccount}
           >
-            {employee?.accountLocked ? "Déverrouiller" : "Verrouiller"}
+            Activer le compte
           </Button>
-
+          )}
         </Box>
 
       </DialogContent>
