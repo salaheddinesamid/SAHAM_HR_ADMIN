@@ -115,7 +115,6 @@ export const EmployeeDetailsDialog = ({ employee, open, onClose }) => {
                   size="small"
                 />
               )}
-
             </Box>
           </Box>
 
